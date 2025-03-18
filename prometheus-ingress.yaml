@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig":
+      { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    #alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:444867164017:certificate/942cad01-d8fb-48fa-98d2-fa5e9b9b2e26    // 2024년도
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:444867164017:certificate/246451ea-e761-42f4-b906-e1cff50fa252
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/success-codes: 200,404,301,302
+    alb.ingress.kubernetes.io/target-type: ip
+  finalizers:
+  - ingress.k8s.aws/resources
+  name: prometheus-server
+  namespace: prometheus
+spec:
+  ingressClassName: alb
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: prometheus-server
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+      - backend:
+          service:
+            name: prometheus-server
+            port:
+              number: 80
+        path: /
+        pathType: Prefix

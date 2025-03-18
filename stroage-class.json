@@ -1,0 +1,14 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: prometheus
+  namespace: prometheus
+provisioner: ebs.csi.aws.com
+parameters:
+  type: gp3                        # 수정
+reclaimPolicy: Retain
+allowedTopologies:
+- matchLabelExpressions:
+  - key: topology.ebs.csi.aws.com/zone
+    values:
+    - us-west-2c                   # 수정
